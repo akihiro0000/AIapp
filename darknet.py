@@ -165,6 +165,7 @@ def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45
     """
         Returns a list with highest confidence class and their bbox
     """
+    metadata = class_names
     class_names = [metadata.names[i].decode("ascii") for i in range(metadata.classes)]
     pnum = pointer(c_int(0))
     predict_image(network, image)
