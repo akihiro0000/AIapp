@@ -17,7 +17,8 @@ from camera import VideoCamera
 import argparse
 from threading import Thread, enumerate
 from queue import Queue
-
+#add
+import paho.mqtt.client as mqtt
 
 app = Flask(__name__)
 
@@ -31,7 +32,10 @@ def index():
 
 def gen(camera):
     while True:
-        frame = camera.get_frame()
+        #add : mqtt_text
+        frame,mqtt_text = camera.get_frame()
+        #add        
+        mqtt_client.publish("/demo/car-count",mqtt_text)
 
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
@@ -45,5 +49,14 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    #add
+    mqtt_client = mqtt.Client()
+    #add
+    mqtt_client.connect("fluentbit", 1883, 60)
+    #add
+    mqtt_client.loop_start()
 
+    app.run(host='0.0.0.0', debug=True)
+    
+    #add
+    mqtt_client.disconnect()

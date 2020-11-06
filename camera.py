@@ -115,5 +115,7 @@ class VideoCamera(object):
         #cv2.imshow('YOLOv3-Tiny', image)
         self.out.write(image)
         #cv2.waitKey(1)
-        return jpeg.tobytes()
+        
+        #add:detections
+        return jpeg.tobytes(),detections
 
