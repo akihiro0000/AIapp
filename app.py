@@ -32,8 +32,8 @@ parser.add_argument('-v', '--verbose', action="store_true",
                     required=False, default=False, help='Enable verbose output')
 parser.add_argument("-i", "--ip", type=str, required=False, default=os.getenv('LISTEN_IP', '0.0.0.0'),
                     help="listen ip address")
-parser.add_argument("--port", type=int, required=False, default=os.getenv('LISTEN_PORT', '5050'),
-                    help="ephemeral port number of the server (1024 to 65535) default 5050")
+parser.add_argument("--port", type=int, required=False, default=os.getenv('LISTEN_PORT', '5000'),
+                    help="ephemeral port number of the server (1024 to 65535) default 5000")
 parser.add_argument('-d', '--devno', type=int, default=os.getenv('DEVNO', '-1'),
                     help='device number for camera (typically -1=find first available, 0=internal, 1=external)')
 parser.add_argument('-n', '--capture-string', type=str, default=os.getenv('CAPTURE_STRING'),
@@ -49,7 +49,7 @@ parser.add_argument('-m', '--model-name', type=str, required=False,
                     default=os.getenv('MODEL_NAME', 'ssd_mobilenet_coco'), help='Name of model')
 parser.add_argument('-x', '--model-version', type=str, required=False, default=os.getenv('MODEL_VERSION', ''),
                     help='Version of model. Default is to use latest version.')
-parser.add_argument('-u', '--url', type=str, required=False, default=os.getenv('TRITON_URL', 'localhost:5050'),
+parser.add_argument('-u', '--url', type=str, required=False, default=os.getenv('TRITON_URL', 'localhost:5000'),
                     help='Inference server URL. Default is localhost:8000.')
 parser.add_argument('-b', '--mqtt-broker-host', type=str, required=False, default=os.getenv('MQTT_BROKER_HOST', 'fluent-bit'),
                     help='mqtt broker host')
