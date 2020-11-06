@@ -97,6 +97,8 @@ class VideoCamera(object):
 
     def get_frame(self):
         ret, frame_read = self.video.read()
+        print(ret)
+        print(frame_read)
         height, width, channels = frame_read.shape[:3]
         frame_rgb = cv2.cvtColor(frame_read, cv2.COLOR_BGR2RGB)
         frame_resized = cv2.resize(frame_rgb,
