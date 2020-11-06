@@ -84,7 +84,7 @@ def gen(camera):
         #add : mqtt_text
         frame,mqtt_text = camera.get_frame()
         #add        
-        mqtt_client.publish("{}/{}".format(args.mqtt_topic, label),mqtt_text)
+        mqtt_client.publish("{}/{}".format(args.mqtt_topic, "car_count"),mqtt_text)
 
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
