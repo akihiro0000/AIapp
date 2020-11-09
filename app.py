@@ -13,6 +13,8 @@ import cv2
 import numpy as np
 import time
 import darknet
+from datetime import datetime
+import json
 from camera import VideoCamera
 #add 
 import argparse
@@ -78,17 +80,23 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-
 def gen(camera):
+    i = 0
     while True:
+        i = i + 1
         #add : mqtt_text
         frame,mqtt_text = camera.get_frame()
         #add        
-        mqtt_client.publish("{}/{}".format(args.mqtt_topic, "car_count"),mqtt_text)
-
+        if str(mqtt_text) !="[]":
+            if i % 2==0:
+                timestamp = '"timestamp":"'+datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')+'"'
+                label = str(mqtt_text[0]).split("'")[1].split("'")[0]
+                value = str(mqtt_text[0]).split("'")[3].split("'")[0]
+                mystr = {'timestamp':datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'),'nodeid':'0','nodeid':'0','sensor':'image',label:value}
+                print(mystr)
+                mqtt_client.publish("{}/{}".format(args.mqtt_topic,"car_count"), str(mystr))
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-
 
 
 
