@@ -109,14 +109,12 @@ class VideoCamera(object):
         
         darknet.copy_image_from_bytes(self.darknet_image,frame_resized.tobytes())
         detections = darknet.detect_image(self.netMain, self.metaMain, self.darknet_image, thresh=0.25)
-        if detections != []:
-            print(detections)
         image = cvDrawBoxes(detections, frame_resized)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         ret, jpeg = cv2.imencode('.jpg', image)
         #cv2.imshow('YOLOv3-Tiny', image)
         self.out.write(image)
-        #cv2.waitKey(1)
+        cv2.waitKey(1)
         
         #add:detections
         return jpeg.tobytes(),detections
