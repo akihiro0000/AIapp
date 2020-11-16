@@ -86,15 +86,17 @@ def gen(camera):
         i = i + 1
         #add : mqtt_text
         frame,mqtt_text = camera.get_frame()
-        #add        
-        if str(mqtt_text) !="[]":
-            if i % 2==0:
-                timestamp = '"timestamp":"'+datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')+'"'
-                label = str(mqtt_text[0]).split("'")[1].split("'")[0]
-                value = str(mqtt_text[0]).split("'")[3].split("'")[0]
-                mystr = {'timestamp':datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'),'nodeid':'0','nodeid':'0','sensor':'image',label:value}
-                print(mystr)
-                mqtt_client.publish("{}/{}".format(args.mqtt_topic,"car_count"), str(mystr))
+        #add
+        if args.publish:
+          if str(mqtt_text) !="[]":
+              if i % 2==0:
+                  timestamp = '"timestamp":"'+datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')+'"'
+                  label = str(mqtt_text[0]).split("'")[1].split("'")[0]
+                  value = str(mqtt_text[0]).split("'")[3].split("'")[0]
+                  mystr = {'timestamp':datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'),'nodeid':'0','nodeid':'0','sensor':'image',label:value}
+                  print(mystr)
+                  mystr = '{"timestamp":"2020-11-16 03:14:45.245211","nodeid":"0","nodeid":"0","sensor":"image","car_count":"0"}'
+                  mqtt_client.publish("{}/{}".format(args.mqtt_topic,"car_count"), str(mystr))
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
@@ -106,6 +108,10 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
+    print("args.publish:{}".format(args.publish))
+    print("args.mqtt_topic:{}".format(args.mqtt_topic))
+    print("args.mqtt_broker_host:{}".format(args.mqtt_broker_host))
+    print("args.mqtt_broker_port:{}".format(args.mqtt_broker_port))
     #add
     mqtt_client = mqtt.Client()
     #add
