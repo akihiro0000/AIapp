@@ -166,7 +166,7 @@ def generate():
     while True:
         with lock:
             if outputFrame is None:
-                continuei
+                continue
         if outputArray!=[]:
             print(outputArray)
 
