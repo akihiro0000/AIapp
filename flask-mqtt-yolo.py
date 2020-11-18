@@ -135,7 +135,7 @@ def detection_loop():
             else:
                 print("--------------Thread_finished(ctl + C)-----------------")
                 
-     except:
+    except:
         os._exit(1)
         
 def getframe(cam,netMain,metaMain,darknet_image,out):
@@ -167,7 +167,7 @@ def generate():
         with lock:
             if outputFrame is None:
                 continuei
-        if outputArray=![]:
+        if outputArray!=[]:
             print(outputArray)
 
         yield (b'--frame\r\n'
