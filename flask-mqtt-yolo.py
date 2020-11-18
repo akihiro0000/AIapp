@@ -24,8 +24,8 @@ parser.add_argument('-v', '--verbose', action="store_true",
                     required=False, default=False, help='Enable verbose output')
 parser.add_argument("-i", "--ip", type=str, required=False, default=os.getenv('LISTEN_IP', '0.0.0.0'),
                     help="listen ip address")
-parser.add_argument("--port", type=int, required=False, default=os.getenv('LISTEN_PORT', '5000'),
-                    help="ephemeral port number of the server (1024 to 65535) default 5000")
+parser.add_argument("--port", type=int, required=False, default=os.getenv('LISTEN_PORT', '8080'),
+                    help="ephemeral port number of the server (1024 to 65535) default 8080")
 parser.add_argument('-d', '--devno', type=int, default=os.getenv('DEVNO', '-1'),
                     help='device number for camera (typically -1=find first available, 0=internal, 1=external)')
 parser.add_argument('-n', '--capture-string', type=str, default=os.getenv('CAPTURE_STRING'),
@@ -133,6 +133,7 @@ def detection_loop():
                 with lock:
                     outputFrame = img
                     outputArray = text
+                    mqtt_client.publish("{}/{}".format(args.mqtt_topic,'car_count'), str(outputArray))
             else:
                 print("--------------Thread_finished(ctl + C)-----------------")
                 
@@ -175,7 +176,11 @@ def generate():
                b'Content-Type: image/jpeg\r\n\r\n' + outputFrame + b'\r\n\r\n')
                
 if __name__ == '__main__':
+    mqtt_client = mqtt.Client()
+    mqtt_client.connect(args.mqtt_broker_host, args.mqtt_broker_port, 60)
+    mqtt_client.loop_start()
+
     t = threading.Thread(target=detection_loop)
     t.start()
-    app.run(host='0.0.0.0',threaded=True,port=5000,debug=False)
+    app.run(host='0.0.0.0',threaded=True,port=8080,debug=False)
     print("--------------finished-----------------")
