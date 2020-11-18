@@ -176,5 +176,5 @@ def generate():
 if __name__ == '__main__':
     t = threading.Thread(target=detection_loop)
     t.start()
-    app.run(host='0.0.0.0',threaded=True,port=2000,debug=False)
+    app.run(host='0.0.0.0',threaded=True,port=5000,debug=False)
     print("--------------finished-----------------")
