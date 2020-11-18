@@ -100,8 +100,9 @@ def detection_loop():
     configPath = "./cfg/yolov3-tiny.cfg"
     weightPath = "./yolov3-tiny.weights"
     metaPath = "./cfg/coco.data"
-    netMain = darknet.load_net_custom(configPath.encode("ascii"), weightPath.encode("ascii"), 0, 1)
-    metaMain = darknet.load_meta(metaPath.encode("ascii"))
+    #netMain = darknet.load_net_custom(configPath.encode("ascii"), weightPath.encode("ascii"), 0, 1)
+    #metaMain = darknet.load_meta(metaPath.encode("ascii"))
+    netMain, metaMain, class_colors = darknet.load_network(configPath,  metaPath, weightPath, batch_size=1)
     try:
         with open(metaPath) as metaFH:
             metaContents = metaFH.read()
