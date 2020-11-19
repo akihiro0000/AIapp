@@ -170,7 +170,8 @@ def generate():
             if outputFrame is None:
                 continue
         if outputArray!=[]:
-            print(outputArray)
+            pass
+            #print(outputArray)
 
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + outputFrame + b'\r\n\r\n')
@@ -184,3 +185,4 @@ if __name__ == '__main__':
     t.start()
     app.run(host='0.0.0.0',threaded=True,port=8080,debug=False)
     print("--------------finished-----------------")
+    mqtt_client.disconnect()
