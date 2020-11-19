@@ -96,7 +96,10 @@ def cvDrawBoxes(detections, img):
     
 def detection_loop():
     global outputFrame,outputArray,lock
-
+    
+    mystr = '{"timestamp":"2020-11-16 03:14:43.430204","nodeid":"0","nodeid":"0","sensor":"image","car_count":"0"}'
+    mqtt_client.publish("{}/{}".format(args.mqtt_topic,'car_count'), str(mystr))
+    
     configPath = "./cfg/yolov3-tiny.cfg"
     weightPath = "./yolov3-tiny.weights"
     metaPath = "./cfg/coco.data"
@@ -133,7 +136,9 @@ def detection_loop():
                 with lock:
                     outputFrame = img
                     outputArray = text
-                    mqtt_client.publish("{}/{}".format(args.mqtt_topic,'car_count'), str(outputArray))
+                    mystr = '{"timestamp":"2020-11-16 03:14:43.430204","nodeid":"0","nodeid":"0","sensor":"image","car_count":"0"}'
+                    mqtt_client.publish("{}/{}".format(args.mqtt_topic,'car_count'), str(mystr))
+                    #mqtt_client.publish("{}/{}".format(args.mqtt_topic,'car_count'), str(outputArray))
             else:
                 print("--------------Thread_finished(ctl + C)-----------------")
                 
