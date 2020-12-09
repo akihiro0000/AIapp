@@ -96,16 +96,13 @@ def cvDrawBoxes(detections, img):
     
 def detection_loop():
     global outputFrame,outputArray,lock
-    
-    mystr = '{"timestamp":"2020-11-16 03:14:43.430204","nodeid":"0","nodeid":"0","sensor":"image","car_count":"0"}'
-    mqtt_client.publish("{}/{}".format(args.mqtt_topic,'car_count'), str(mystr))
-    
+
     configPath = "./cfg/yolov3-tiny.cfg"
     weightPath = "./yolov3-tiny.weights"
     metaPath = "./cfg/coco.data"
-    #netMain = darknet.load_net_custom(configPath.encode("ascii"), weightPath.encode("ascii"), 0, 1)
-    #metaMain = darknet.load_meta(metaPath.encode("ascii"))
-    netMain, metaMain, class_colors = darknet.load_network(configPath,  metaPath, weightPath, batch_size=1)
+    netMain = darknet.load_net_custom(configPath.encode("ascii"), weightPath.encode("ascii"), 0, 1)
+    metaMain = darknet.load_meta(metaPath.encode("ascii"))
+    #netMain, metaMain, class_colors = darknet.load_network(configPath,  metaPath, weightPath, batch_size=1)
     try:
         with open(metaPath) as metaFH:
             metaContents = metaFH.read()
@@ -134,11 +131,19 @@ def detection_loop():
         for img,text in getframe(cam,netMain,metaMain,darknet_image,out):
             if img is not None:
                 with lock:
+                    if text!=[]:
+                        timestamp = '"timestamp":"'+datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')+'"'
+                        thing = text[0][0]
+                        value = text[0][1]
+                        inspect = '"'+str(thing)+'"'+":"+'"'+str(value)+'"'
+                        mylist = [timestamp, inspect]
+                        mystr = '{'+','.join(map(str, mylist))+'}'
+                        print(mystr)
+                        outputArray = text
+                        mqtt_client.publish("{}/{}".format(args.mqtt_topic,'car_count'), mystr)
+                    else:
+                        outputArray = text
                     outputFrame = img
-                    outputArray = text
-                    mystr = '{"timestamp":"2020-11-16 03:14:43.430204","nodeid":"0","nodeid":"0","sensor":"image","car_count":"0"}'
-                    mqtt_client.publish("{}/{}".format(args.mqtt_topic,'car_count'), str(mystr))
-                    #mqtt_client.publish("{}/{}".format(args.mqtt_topic,'car_count'), str(outputArray))
             else:
                 print("--------------Thread_finished(ctl + C)-----------------")
                 
